@@ -9,15 +9,17 @@ from nltk.tokenize import RegexpTokenizer
 import nltk
 from collections import defaultdict 
 import numpy as np
+from utils.data_process import imbalance_process
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--dataset", type=str, default='en_email', help='dataset')
-parser.add_argument("--amount", type=int, default=2000, help='the number of example')
+parser.add_argument("--amount", type=int, default=10000, help='the number of example')
 parser.add_argument("--seed", type=int, default=23, help='Random seed')
 parser.add_argument("--size", type=float, default=0.2, help='test_size')
 parser.add_argument("--tfidf", action='store_true', help='tfidf')
 parser.add_argument("--alpha", type=float, default=1.0, help='Laplace Smoothing')
+parser.add_argument("--ir", type=float, default=1.0, help='Imbalance ratio')
 
 args = parser.parse_args()
 
@@ -36,7 +38,13 @@ df = pd.read_csv(path, nrows=args.amount)
 rows_with_nan = df.isnull().any(axis=1)  
 
 # 去除无法读取的例子 
-dataset = df[~rows_with_nan]  
+dataset = df[~rows_with_nan]
+
+# 不平衡率
+target_imbalance_ratio = args.ir
+
+# 处理数据集并达到设置的不平衡率
+dataset = imbalance_process(dataset, target_imbalance_ratio)
 
 if args.dataset == 'cn_email':
     # 中文分词

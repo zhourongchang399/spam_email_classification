@@ -12,6 +12,8 @@ parser.add_argument("--size", type=float, default=0.2, help='test_size')
 parser.add_argument("--tfidf", action='store_true', help='tfidf')
 拉普拉斯平滑指数
 parser.add_argument("--alpha", type=float, default=1.0, help='Laplace Smoothing')
+类别不平衡率
+parser.add_argument("--ir", type=float, default=1, help='Imbalance ratio')
 
 ### spam-email classification tfidf:
 - python3 main.py --dataset=cn_email --tfidf --amount=10000 --alpha=0.1
